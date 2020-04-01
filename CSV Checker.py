@@ -11,31 +11,35 @@ def csv_checker():
     row_count = 0
     correct_date_count = 0
     incorrect_date_count = 0
+    total_value = 0
     for row in file_content:
         if row_count != 0:
             if check_date_format(row[0]):
                 correct_date_count = correct_date_count + 1
+                total_value = total_value + int(row[9])
             else:
-                print(str(row_count) + " " + row + " Incorrect!")
+                print(str(row_count) + " " + row[0] + " Incorrect!")
                 incorrect_date_count = incorrect_date_count + 1
 
         row_count = row_count + 1
 
     print("Correct date count: " + str(correct_date_count))
     print("Incorrect date count: " + str(incorrect_date_count))
-
+    column_number = get_column_number_parameter()
+    print(str(column_number))
+    print("Value: " + str(total_value))
     return True
 
 
 def get_headers_parameter():
     param_file = load_csv_file("Headers.csv", True)
-    headers_list = next(param_file)
+    headers_list = next(iter(param_file))
     return headers_list
 
 
 def get_column_number_parameter():
     param_file = load_csv_file("Headers.csv", True)
-    headers_list = next(param_file)
+    headers_list = next(iter(param_file))
     header_count = 0
     for column_count in headers_list:
         header_count = header_count + 1
@@ -43,7 +47,7 @@ def get_column_number_parameter():
 
 
 def load_csv_file(filename, param=False):
-    if param == True:
+    if param:
         folder = "Parameters/"
     else:
         folder = "Check/"
