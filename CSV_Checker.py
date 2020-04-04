@@ -4,9 +4,6 @@ import re
 import time
 
 
-# from prettyTable import PrettyTable
-
-
 def csv_checker():
     files_list = get_all_check_filenames()
     account_list = get_account_name_list()
@@ -25,8 +22,15 @@ def csv_checker():
 
         file_content = load_csv_file(file)
         incorrect_rows = []
+        print("<-------------------------------------------------------------------------------->")
+        print(" File name: " + file)
+
+        l = len(list(file_content))
+
+        printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
 
         for row in file_content:
+
             if row_count != 0:
 
                 ch_b_date = check_date_format(row[0])  # Begin date
@@ -53,9 +57,8 @@ def csv_checker():
                     incorrect_rows.append(row)
 
             row_count = row_count + 1
+            printProgressBar(row_count, l, prefix='Progress:', suffix='Complete')
 
-        print("<-------------------------------------------------------------------------------->")
-        print(" File name: " + file)
         print(" Units: " + str(total_units) + "\tValue: " + str(total_value) + "\tStore stock: " + str(total_store) +
               "\tDC stock: " + str(total_dc))
 
@@ -63,6 +66,7 @@ def csv_checker():
 
         print("<-------------------------------------------------------------------------------->\n")
 
+    """
         if incorrect_row_count > 0:
             print("Incorrect rows:\n")
             headers_row = ""
@@ -78,6 +82,7 @@ def csv_checker():
                 print(row_data)
 
     return True
+    """
 
 
 def get_headers_parameter():
@@ -140,6 +145,29 @@ def check_decimal_number_format(number):
         return True
     except ValueError:
         return False
+
+
+# Print iterations progress
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end=printEnd)
+    # Print New Line on Complete
+    if iteration == total:
+        print()
 
 
 startTime = time.time()
