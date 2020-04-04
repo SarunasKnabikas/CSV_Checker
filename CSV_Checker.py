@@ -25,10 +25,6 @@ def csv_checker():
         print("<-------------------------------------------------------------------------------->")
         print(" File name: " + file)
 
-        l = len(list(file_content))
-
-        printProgressBar(0, l, prefix=' Progress:', suffix='Complete')
-
         for row in file_content:
 
             if row_count != 0:
@@ -57,7 +53,6 @@ def csv_checker():
                     incorrect_rows.append(row)
 
             row_count = row_count + 1
-            printProgressBar(row_count, l, prefix='Progress:', suffix='Complete')
 
         print(" Units: " + str(total_units) + "\tValue: " + str(total_value) + "\tStore stock: " + str(total_store) +
               "\tDC stock: " + str(total_dc))
