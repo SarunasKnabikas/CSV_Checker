@@ -8,27 +8,75 @@ import time
 
 
 def csv_checker():
-    file_content = load_csv_file('test.csv')
-    row_count = 0
-    correct_date_count = 0
-    incorrect_date_count = 0
-    total_value = 0
-    for row in file_content:
-        if row_count != 0:
-            if check_date_format(row[0]):
-                correct_date_count = correct_date_count + 1
-                total_value = total_value + int(row[9])
-            else:
-                print(str(row_count) + " " + row[0] + " Incorrect!")
-                incorrect_date_count = incorrect_date_count + 1
+    files_list = get_all_check_filenames()
+    account_list = get_account_name_list()
+    header_list = get_headers_parameter()
 
-        row_count = row_count + 1
+    for file in files_list:
+        row_count = 0
+        correct_row_count = 0
+        incorrect_row_count = 0
+        total_units = 0
+        total_value = 0.00
+        total_store = 0
+        total_dc = 0
+        total_base_value = 0
+        total_base_units = 0
 
-    print("Correct date count: " + str(correct_date_count))
-    print("Incorrect date count: " + str(incorrect_date_count))
-    column_number = get_column_number_parameter()
-    print(str(column_number))
-    print("Value: " + str(total_value))
+        file_content = load_csv_file(file)
+        incorrect_rows = []
+
+        for row in file_content:
+            if row_count != 0:
+
+                ch_b_date = check_date_format(row[0])  # Begin date
+                ch_e_date = check_date_format(row[1])  # End date
+                ch_ean = check_whole_number_format(row[2])  # EAN
+                ch_upc = check_whole_number_format(row[3])  # UPC
+                ch_u = check_whole_number_format(row[8])  # Total Sales Volume
+                ch_v = check_decimal_number_format(row[9])  # Total Sales Amount
+                ch_s = check_whole_number_format(row[10])  # Store On Hand Volume Units
+                ch_dc = check_whole_number_format(row[11])  # DC on Hand Volume Units
+                ch_b_u = check_whole_number_format(row[12])  # Baseline Sales Amount
+                ch_b_v = check_whole_number_format(row[13])  # Baseline Sales Volume Units
+
+                if ch_b_date & ch_e_date & ch_ean & ch_upc & ch_u & ch_v & ch_s & ch_dc & ch_b_u & ch_b_v:
+                    correct_row_count = correct_row_count + 1
+                    total_units = total_units + int(row[8])
+                    total_value = total_value + float(row[9])
+                    total_store = total_store + int(row[10])
+                    total_dc = total_dc + int(row[11])
+                    total_base_value = total_base_value + int(row[12])
+                    total_base_units = total_base_units + int(row[13])
+                else:
+                    incorrect_row_count = incorrect_row_count + 1
+                    incorrect_rows.append(row)
+
+            row_count = row_count + 1
+
+        print("<-------------------------------------------------------------------------------->")
+        print(" File name: " + file)
+        print(" Units: " + str(total_units) + "\tValue: " + str(total_value) + "\tStore stock: " + str(total_store) +
+              "\tDC stock: " + str(total_dc))
+
+        print(" Base Value: " + str(total_base_value) + "\tBase Units: " + str(total_base_units))
+
+        print("<-------------------------------------------------------------------------------->\n")
+
+        if incorrect_row_count > 0:
+            print("Incorrect rows:\n")
+            headers_row = ""
+
+            for column in header_list:
+                headers_row = headers_row + column + '\t'
+            print(headers_row)
+
+            for row in incorrect_rows:
+                row_data = ""
+                for column in row:
+                    row_data = row_data + column + '\t'
+                print(row_data)
+
     return True
 
 
@@ -48,7 +96,7 @@ def get_column_number_parameter():
 
 
 def get_account_name_list():
-    account_list = load_csv_file("Accounts.csv")
+    account_list = load_csv_file("Accounts.csv", True)
     return account_list
 
 
