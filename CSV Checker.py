@@ -1,6 +1,7 @@
 import csv
 from os import listdir
 import re
+import time
 
 
 # from prettyTable import PrettyTable
@@ -46,6 +47,11 @@ def get_column_number_parameter():
     return header_count
 
 
+def get_account_name_list():
+    account_list = load_csv_file("Accounts.csv")
+    return account_list
+
+
 def load_csv_file(filename, param=False):
     if param:
         folder = "Parameters/"
@@ -72,4 +78,22 @@ def check_date_format(date):
         return False
 
 
+def check_whole_number_format(number):
+    match_number_format = re.match('[0-9]', number)
+    if match_number_format is not None:
+        return True
+    else:
+        return False
+
+
+def check_decimal_number_format(number):
+    try:
+        val = float(number)
+        return True
+    except ValueError:
+        return False
+
+
+startTime = time.time()
 csv_checker()
+print('The script took {0} second!'.format(time.time() - startTime))
