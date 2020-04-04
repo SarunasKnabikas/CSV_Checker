@@ -27,7 +27,7 @@ def csv_checker():
 
         l = len(list(file_content))
 
-        printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
+        printProgressBar(0, l, prefix=' Progress:', suffix='Complete')
 
         for row in file_content:
 
@@ -172,4 +172,4 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
 
 startTime = time.time()
 csv_checker()
-print('The script took {0} second!'.format(time.time() - startTime))
+print('The script took {0} second!'.format(round(time.time() - startTime, 2)))
