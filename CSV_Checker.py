@@ -2,6 +2,7 @@ import csv
 from os import listdir
 import re
 import time
+import shutil
 
 
 def csv_checker():
@@ -22,8 +23,6 @@ def csv_checker():
 
         file_content = load_csv_file(file)
         incorrect_rows = []
-        print("<-------------------------------------------------------------------------------->")
-        print(" File name: " + file)
 
         for row in file_content:
 
@@ -54,30 +53,22 @@ def csv_checker():
 
             row_count = row_count + 1
 
-        print(" Units: " + str(total_units) + "\tValue: " + str(total_value) + "\tStore stock: " + str(total_store) +
-              "\tDC stock: " + str(total_dc))
+        if incorrect_row_count == 0:
+            print(
+                " File name: " + file + "\t\t\t ===> OK <===" + "\t\t\tUnits: " + str(total_units) + "\tValue: " + str(
+                    total_value) + "\tStore stock: " + str(total_store) +
+                "\tDC stock: " + str(total_dc) + " Base Value: " + str(total_base_value) + "\tBase Units: " + str(
+                    total_base_units))
 
-        print(" Base Value: " + str(total_base_value) + "\tBase Units: " + str(total_base_units))
-
-        print("<-------------------------------------------------------------------------------->\n")
-
-    """
-        if incorrect_row_count > 0:
-            print("Incorrect rows:\n")
-            headers_row = ""
-
-            for column in header_list:
-                headers_row = headers_row + column + '\t'
-            print(headers_row)
-
-            for row in incorrect_rows:
-                row_data = ""
-                for column in row:
-                    row_data = row_data + column + '\t'
-                print(row_data)
+            shutil.move('Check/' + file, 'Correct/' + file)
+        else:
+            with open('Error/' + file, 'w', newline='') as errorFile:
+                writer = csv.writer(errorFile)
+                writer.writerows(incorrect_rows)
+                print(" File name: " + file + ' \t\t\tErrors in rows: ' + str(
+                    incorrect_row_count) + "\t\t\t===> Error file saved. <===")
 
     return True
-    """
 
 
 def get_headers_parameter():
