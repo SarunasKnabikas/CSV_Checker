@@ -5,10 +5,53 @@ import CSV_Checks
 import CSV_Params
 
 
+def row_check(row, account_list, exp_column_number, row_number, ean_list):
+    if row_number == 0:
+        if not CSV_Checks.check_column_count(row, exp_column_number):
+            return False
+    else:
+        if not CSV_Checks.check_column_count(row, exp_column_number):
+            return False
+        if not CSV_Checks.check_date_format(row[0]):  # Begin date
+            return False
+        if not CSV_Checks.check_date_format(row[1]):  # End date
+            return False
+        if not CSV_Checks.check_whole_number_format(row[2]):  # EAN
+            return False
+        if not CSV_Checks.check_if_exist_in_list(row[2], ean_list):  # Does EAN exist
+            return False
+        if not CSV_Checks.check_whole_number_format(row[3]):  # UPC
+            return False
+        if not CSV_Checks.check_text(row[4], 'ABC'):  # Prod Desc Retailer
+            return False
+        if not CSV_Checks.check_text(row[5], 'GBP'):  # Currency
+            return False
+        if not CSV_Checks.check_text(row[6], 'UN'):  # UOM
+            return False
+        if not CSV_Checks.check_if_exist_in_list(str(row[7]), account_list):  # Retailer
+            return False
+        if not CSV_Checks.check_whole_number_format(row[8]):  # Total Sales Volume
+            return False
+        if not CSV_Checks.check_decimal_number_format(row[9]):  # Total Sales Amount
+            return False
+        if not CSV_Checks.check_whole_number_format(row[10]):  # Store On Hand Volume Units
+            return False
+        if not CSV_Checks.check_whole_number_format(row[11]):  # DC on Hand Volume Units
+            return False
+        if not CSV_Checks.check_whole_number_format(row[12]):  # Baseline Sales Amount
+            return False
+        if CSV_Checks.check_whole_number_format(row[13]):  # Baseline Sales Volume Units
+            return True
+        else:
+            return False
+
+
 def csv_checker():
     files_list = CSV_Params.get_all_check_filenames()
     account_list = CSV_Params.get_account_name_list()
     header_list = CSV_Params.get_headers_parameter()
+    expected_column_number = CSV_Params.get_column_number_parameter()
+    ean_list = CSV_Params.get_ean_list()
 
     for file in files_list:
         row_count = 0
@@ -24,35 +67,27 @@ def csv_checker():
         file_content = CSV_Params.load_csv_file(file)
         incorrect_rows = []
 
+        headers_check = 1
+
         for row in file_content:
+            if row_count == 0:
+                if not CSV_Checks.check_if_lists_equal(row, header_list):
+                    headers_check = 2
+            else:
+                if headers_check == 1:
 
-            if row_count != 0:
+                    if row_check(row, account_list, expected_column_number, row_count, ean_list):
 
-                ch_b_date = CSV_Checks.check_date_format(row[0])  # Begin date
-                ch_e_date = CSV_Checks.check_date_format(row[1])  # End date
-                ch_ean = CSV_Checks.check_whole_number_format(row[2])  # EAN
-                ch_upc = CSV_Checks.check_whole_number_format(row[3])  # UPC
-
-                ch_prod_desc = row[4]
-                ch_curr = row[5]
-                ch_uom = row[6]
-                ch_retail = row[7]
-
-                ch_u = CSV_Checks.check_whole_number_format(row[8])  # Total Sales Volume
-                ch_v = CSV_Checks.check_decimal_number_format(row[9])  # Total Sales Amount
-                ch_s = CSV_Checks.check_whole_number_format(row[10])  # Store On Hand Volume Units
-                ch_dc = CSV_Checks.check_whole_number_format(row[11])  # DC on Hand Volume Units
-                ch_b_u = CSV_Checks.check_whole_number_format(row[12])  # Baseline Sales Amount
-                ch_b_v = CSV_Checks.check_whole_number_format(row[13])  # Baseline Sales Volume Units
-
-                if ch_b_date & ch_e_date & ch_ean & ch_upc & ch_u & ch_v & ch_s & ch_dc & ch_b_u & ch_b_v:
-                    correct_row_count = correct_row_count + 1
-                    total_units = total_units + int(row[8])
-                    total_value = total_value + float(row[9])
-                    total_store = total_store + int(row[10])
-                    total_dc = total_dc + int(row[11])
-                    total_base_value = total_base_value + int(row[12])
-                    total_base_units = total_base_units + int(row[13])
+                        correct_row_count = correct_row_count + 1
+                        total_units = total_units + int(row[8])
+                        total_value = total_value + float(row[9])
+                        total_store = total_store + int(row[10])
+                        total_dc = total_dc + int(row[11])
+                        total_base_value = total_base_value + int(row[12])
+                        total_base_units = total_base_units + int(row[13])
+                    else:
+                        incorrect_row_count = incorrect_row_count + 1
+                        incorrect_rows.append(row)
                 else:
                     incorrect_row_count = incorrect_row_count + 1
                     incorrect_rows.append(row)

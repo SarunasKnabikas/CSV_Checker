@@ -9,6 +9,17 @@ def check_date_format(date):
         return False
 
 
+def check_column_count(row, expected_column_number):
+    column_number = 0
+    for column in row:
+        column_number = column_number + 1
+
+    if column_number == expected_column_number:
+        return True
+    else:
+        return False
+
+
 def check_whole_number_format(number):
     match_number_format = re.match('[0-9]', number)
     if match_number_format is not None:
@@ -26,15 +37,29 @@ def check_decimal_number_format(number):
 
 
 def check_if_exist_in_list(value, value_list):
-    if list.count(value_list) == 1:
+    if value in value_list:
         return True
     else:
         return False
 
 
-def check_if_duplicates_1(list_of_elems):
+def check_for_duplicates(list_of_elements):
     ''' Check if given list contains any duplicates '''
-    if len(list_of_elems) == len(set(list_of_elems)):
+    if len(list_of_elements) == len(set(list_of_elements)):
         return False
     else:
         return True
+
+
+def check_text(value_to_check, text):
+    if value_to_check == text:
+        return True
+    else:
+        return False
+
+
+def check_if_lists_equal(listToCheck, mainList):
+    if listToCheck == mainList:
+        return True
+    else:
+        return False

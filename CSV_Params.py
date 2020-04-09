@@ -18,8 +18,21 @@ def get_column_number_parameter():
 
 
 def get_account_name_list():
-    account_list = load_csv_file("Accounts.csv", True)
+    account_list = []
+    account_file = load_csv_file("Accounts.csv", True)
+    for row in account_file:
+        account_list.extend(row)
+
     return account_list
+
+
+def get_ean_list():
+    ean_list = []
+    ean_file = load_csv_file("Ean_list.csv", True)
+    for row in ean_file:
+        ean_list.extend(row)
+
+    return ean_list
 
 
 def load_csv_file(filename, param=False):
