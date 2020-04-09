@@ -6,44 +6,80 @@ import CSV_Params
 
 
 def row_check(row, account_list, exp_column_number, row_number, ean_list):
+    results = [True, ""]
     if row_number == 0:
         if not CSV_Checks.check_column_count(row, exp_column_number):
-            return False
+            results[0] = False
+            results[1] = "Comma error."
+            return results
     else:
         if not CSV_Checks.check_column_count(row, exp_column_number):
-            return False
+            results[0] = False
+            results[1] = 'Comma error.'
+            return results
         if not CSV_Checks.check_date_format(row[0]):  # Begin date
-            return False
+            results[0] = False
+            results[1] = 'Date format incorrect.'
+            return results
         if not CSV_Checks.check_date_format(row[1]):  # End date
-            return False
+            results[0] = False
+            results[1] = 'Date format incorrect.'
+            return results
         if not CSV_Checks.check_whole_number_format(row[2]):  # EAN
-            return False
+            results[0] = False
+            results[1] = 'EAN format is incorrect.'
+            return results
         if not CSV_Checks.check_if_exist_in_list(row[2], ean_list):  # Does EAN exist
-            return False
+            results[0] = False
+            results[1] = 'EAN is not in DB.'
+            return results
         if row[3] == '':  # UPC
-            return False
+            results[0] = False
+            results[1] = 'UPC is empty.'
+            return results
         if not CSV_Checks.check_text(row[4], 'ABC'):  # Prod Desc Retailer
-            return False
+            results[0] = False
+            results[1] = 'Product description is not ABC.'
+            return results
         if not CSV_Checks.check_text(row[5], 'GBP'):  # Currency
-            return False
+            results[0] = False
+            results[1] = 'Currency not GBP.'
+            return results
         if not CSV_Checks.check_text(row[6], 'UN'):  # UOM
-            return False
+            results[0] = False
+            results[1] = 'UOM is not UN.'
+            return results
         if not CSV_Checks.check_if_exist_in_list(str(row[7]), account_list):  # Retailer
-            return False
+            results[0] = False
+            results[1] = 'Retailer is not in account list.'
+            return results
         if not CSV_Checks.check_whole_number_format(row[8]):  # Total Sales Volume
-            return False
+            results[0] = False
+            results[1] = 'Units figure format incorrect.'
+            return results
         if not CSV_Checks.check_decimal_number_format(row[9]):  # Total Sales Amount
-            return False
+            results[0] = False
+            results[1] = 'Value figure format incorrect.'
+            return results
         if not CSV_Checks.check_whole_number_format(row[10]):  # Store On Hand Volume Units
-            return False
+            results[0] = False
+            results[1] = 'Store stock figure format incorrect.'
+            return results
         if not CSV_Checks.check_whole_number_format(row[11]):  # DC on Hand Volume Units
-            return False
+            results[0] = False
+            results[1] = 'DC stock figure format incorrect.'
+            return results
         if not CSV_Checks.check_whole_number_format(row[12]):  # Baseline Sales Amount
-            return False
-        if CSV_Checks.check_whole_number_format(row[13]):  # Baseline Sales Volume Units
-            return True
+            results[0] = False
+            results[1] = 'Base Value figure format incorrect.'
+            return results
+        if not CSV_Checks.check_whole_number_format(row[13]):  # Baseline Sales Volume Units
+            results[0] = False
+            results[1] = 'Base Units figure format incorrect.'
+            return results
         else:
-            return False
+            results[0] = True
+            return results
 
 
 def csv_checker():
@@ -66,6 +102,7 @@ def csv_checker():
 
         file_content = CSV_Params.load_csv_file(file)
         incorrect_rows = []
+        row_check_results = []
 
         headers_check = 1
 
@@ -75,8 +112,8 @@ def csv_checker():
                     headers_check = 2
             else:
                 if headers_check == 1:
-
-                    if row_check(row, account_list, expected_column_number, row_count, ean_list):
+                    row_check_results = row_check(row, account_list, expected_column_number, row_count, ean_list)
+                    if row_check_results[0]:
 
                         correct_row_count = correct_row_count + 1
                         total_units = total_units + int(row[8])
@@ -86,11 +123,13 @@ def csv_checker():
                         total_base_value = total_base_value + int(row[12])
                         total_base_units = total_base_units + int(row[13])
                     else:
+                        row.append(row_check_results[1])
                         incorrect_row_count = incorrect_row_count + 1
                         incorrect_rows.append(row)
                 else:
                     incorrect_row_count = incorrect_row_count + 1
                     incorrect_rows.append(row)
+                    incorrect_rows.extend('Incorrect headers!')
 
             row_count = row_count + 1
 
