@@ -20,7 +20,7 @@ def row_check(row, account_list, exp_column_number, row_number, ean_list):
             return False
         if not CSV_Checks.check_if_exist_in_list(row[2], ean_list):  # Does EAN exist
             return False
-        if not CSV_Checks.check_whole_number_format(row[3]):  # UPC
+        if row[3] == '':  # UPC
             return False
         if not CSV_Checks.check_text(row[4], 'ABC'):  # Prod Desc Retailer
             return False
@@ -98,7 +98,8 @@ def csv_checker():
             print(
                 " File name: " + file + "\t\t\t ===> OK <===" + "\t\t\tUnits: " + str(total_units) + "\tValue: " + str(
                     total_value) + "\tStore stock: " + str(total_store) +
-                "\tDC stock: " + str(total_dc) + " Base Value: " + str(total_base_value) + "\tBase Units: " + str(
+                "\tDC stock: " + str(total_dc) + " Base Value: " + str(
+                    round(total_base_value, 2)) + "\tBase Units: " + str(
                     total_base_units))
 
             shutil.move('Check/' + file, 'Correct/' + file)
@@ -114,4 +115,4 @@ def csv_checker():
 
 startTime = time.time()
 csv_checker()
-print('The script took {0} seconds!'.format(round(time.time() - startTime, 2)))
+print('The script took {0} seconds!'.format(round(time.time() - startTime, 3)))
