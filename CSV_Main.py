@@ -127,9 +127,9 @@ def csv_checker():
                         incorrect_row_count = incorrect_row_count + 1
                         incorrect_rows.append(row)
                 else:
+                    row.append('Incorrect headers!')
                     incorrect_row_count = incorrect_row_count + 1
                     incorrect_rows.append(row)
-                    incorrect_rows.extend('Incorrect headers!')
 
             row_count = row_count + 1
 
