@@ -102,7 +102,6 @@ def csv_checker():
 
         file_content = CSV_Params.load_csv_file(file)
         incorrect_rows = []
-        row_check_results = []
 
         headers_check = 1
 
@@ -135,7 +134,9 @@ def csv_checker():
 
         if incorrect_row_count == 0:
             print(
-                " File name: " + file + "\t\t\t ===> OK <===" + "\t\t\tUnits: " + str(total_units) + "\tValue: " + str(
+                " File name: " + file + "\t\t\tRow count: " + str(
+                    row_count) + "\t\t\t ===> OK <===" + "\t\t\tUnits: " + str(
+                    total_units) + "\tValue: " + str(
                     total_value) + "\tStore stock: " + str(total_store) +
                 "\tDC stock: " + str(total_dc) + " Base Value: " + str(
                     round(total_base_value, 2)) + "\tBase Units: " + str(
@@ -146,7 +147,7 @@ def csv_checker():
             with open('Error/' + file, 'w', newline='') as errorFile:
                 writer = csv.writer(errorFile)
                 writer.writerows(incorrect_rows)
-                print(" File name: " + file + ' \t\t\tErrors in rows: ' + str(
+                print(" File name: " + file + "\t\t\tRow count: " + str(row_count) + ' \t\t\tErrors in rows: ' + str(
                     incorrect_row_count) + "\t\t\t===> Error file saved. <===")
 
     return True
