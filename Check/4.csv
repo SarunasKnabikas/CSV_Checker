@@ -1,5 +1,5 @@
 Begin date,End Date,EAN,UPC,Prod Desc Retailer, Currency,UOM,Retailer,Total Sales Volume,Total Sales Amount,Store On Hand Volume Units,DC On Hand Volume Units,Baseline Sales Amount,Baseline Sales Volume Units
-2019-05-12,2019-05-18,800897016791,75865252,ABC,GBP,UN,Test Retailer,3,5.01,7,4,6,8
+2019-05-12,2019-05-12,800897016791,75865252,ABC,GBP,UN,Test Retailer,3,5.01,7,4,6,8
 2019-05-12,2019-05-18,800897016791,75865252,ABC,GBP,UN,Test Retailer,3,6.01,7,4,6,8
 2019-05-12,2019-05-18,111111111111,75865252,ABC,GBP,UN,Test Retailer,3,7.01,7,4,6,8
 2019-05-12,2019-05-18,222222222222,75865252,ABC,GBP,UN,Test Retailer,3,8.01,7,4,6,8

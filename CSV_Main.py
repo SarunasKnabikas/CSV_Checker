@@ -3,9 +3,13 @@ import time
 import shutil
 import CSV_Checks
 import CSV_Params
+import datetime
+from datetime import datetime
 
 
 def row_check(row, account_list, exp_column_number, row_number, ean_list, file_name):
+    begin_date = datetime.strptime(row[0], '%Y-%m-%d').date()
+    end_date = datetime.strptime(row[1], '%Y-%m-%d').date()
     results = [True, ""]
     if row_number == 0:
         if not CSV_Checks.check_column_count(row, exp_column_number):
@@ -19,11 +23,20 @@ def row_check(row, account_list, exp_column_number, row_number, ean_list, file_n
             return results
         if not CSV_Checks.check_date_format(row[0]):  # Begin date
             results[0] = False
-            results[1] = 'Date format incorrect.'
+            results[1] = 'Begin date format incorrect.'
+            return results
+        if not datetime.strptime(row[0], '%Y-%m-%d').date().weekday() == 6:  # Begin date weekday check
+
+            results[0] = False
+            results[1] = 'Begin date in not Sunday.'
             return results
         if not CSV_Checks.check_date_format(row[1]):  # End date
             results[0] = False
-            results[1] = 'Date format incorrect.'
+            results[1] = 'End date format incorrect.'
+            return results
+        if not datetime.strptime(row[1], '%Y-%m-%d').date().weekday() == 5:  # End date
+            results[0] = False
+            results[1] = 'End date is not Saturday.'
             return results
         if not CSV_Checks.check_whole_number_format(row[2]):  # EAN
             results[0] = False
