@@ -43,12 +43,18 @@ def check_if_exist_in_list(value, value_list):
         return False
 
 
-def check_for_duplicates(list_of_elements):
-    ''' Check if given list contains any duplicates '''
-    if len(list_of_elements) == len(set(list_of_elements)):
+def check_count_in_list(value, value_list):
+    value_count = value_list.count(value)
+    if value_count > 1:
         return False
     else:
         return True
+
+
+def check_for_duplicates(list_of_elements):
+    ''' Check if given list contains any duplicates '''
+    seen = set()
+    return not any(i in seen or seen.add(i) for i in list_of_elements)
 
 
 def check_text(value_to_check, text):

@@ -35,6 +35,14 @@ def get_ean_list():
     return ean_list
 
 
+def get_check_csv_ean_list(file_name):
+    ean_list = []
+    check_file = load_csv_file(file_name)
+    for row in check_file:
+        ean_list.append(str(row[2]))
+    return ean_list
+
+
 def load_csv_file(filename, param=False):
     if param:
         folder = "Parameters/"

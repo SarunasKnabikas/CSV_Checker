@@ -5,7 +5,7 @@ import CSV_Checks
 import CSV_Params
 
 
-def row_check(row, account_list, exp_column_number, row_number, ean_list):
+def row_check(row, account_list, exp_column_number, row_number, ean_list, file_name):
     results = [True, ""]
     if row_number == 0:
         if not CSV_Checks.check_column_count(row, exp_column_number):
@@ -32,6 +32,12 @@ def row_check(row, account_list, exp_column_number, row_number, ean_list):
         if not CSV_Checks.check_if_exist_in_list(row[2], ean_list):  # Does EAN exist
             results[0] = False
             results[1] = 'EAN is not in DB.'
+            return results
+        if not CSV_Checks.check_count_in_list(row[2],
+                                              CSV_Params.get_check_csv_ean_list(
+                                                  str(file_name))):  # Checks EAN for duplicates
+            results[0] = False
+            results[1] = 'EAN is duplicated.'
             return results
         if row[3] == '':  # UPC
             results[0] = False
@@ -111,16 +117,16 @@ def csv_checker():
                     headers_check = 2
             else:
                 if headers_check == 1:
-                    row_check_results = row_check(row, account_list, expected_column_number, row_count, ean_list)
+                    row_check_results = row_check(row, account_list, expected_column_number, row_count, ean_list, file)
                     if row_check_results[0]:
 
                         correct_row_count = correct_row_count + 1
-                        total_units = total_units + int(row[8])
+                        total_units = total_units + float(row[8])
                         total_value = total_value + float(row[9])
-                        total_store = total_store + int(row[10])
-                        total_dc = total_dc + int(row[11])
-                        total_base_value = total_base_value + int(row[12])
-                        total_base_units = total_base_units + int(row[13])
+                        total_store = total_store + float(row[10])
+                        total_dc = total_dc + float(row[11])
+                        total_base_value = total_base_value + float(row[12])
+                        total_base_units = total_base_units + float(row[13])
                     else:
                         row.append(row_check_results[1])
                         incorrect_row_count = incorrect_row_count + 1
@@ -136,11 +142,11 @@ def csv_checker():
             print(
                 " File name: " + file + "\t\t\tRow count: " + str(
                     row_count) + "\t\t\t ===> OK <===" + "\t\t\tUnits: " + str(
-                    total_units) + "\tValue: " + str(
-                    total_value) + "\tStore stock: " + str(total_store) +
-                "\tDC stock: " + str(total_dc) + " Base Value: " + str(
+                    round(total_units, 0)) + "\tValue: " + str(
+                    round(total_value, 2)) + "\tStore stock: " + str(round(total_store, 0)) +
+                "\tDC stock: " + str(round(total_dc, 0)) + " Base Value: " + str(
                     round(total_base_value, 2)) + "\tBase Units: " + str(
-                    total_base_units))
+                    round(total_base_units, 0)))
 
             shutil.move('Check/' + file, 'Correct/' + file)
         else:
