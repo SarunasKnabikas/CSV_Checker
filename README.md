@@ -30,4 +30,4 @@ It's use case is intended for smaller than 6MB CSV files. 30 files are processed
 
 ## Step-by-step: How to run the script
 1. Windows: Add path to python.exe and path to script into batch file. This will allow to run script simply running batch file.
-2. Script can be ran directly from CMD and PowerShell in windows and using terminal in other systems. Please google for specifics.
+2. Script can be ran directly from CMD and PowerShell in windows and using terminal in other systems. Please google for specifics of your system.
