@@ -8,8 +8,6 @@ from datetime import datetime
 
 
 def row_check(row, account_list, exp_column_number, row_number, ean_list, file_name):
-    begin_date = datetime.strptime(row[0], '%Y-%m-%d').date()
-    end_date = datetime.strptime(row[1], '%Y-%m-%d').date()
     results = [True, ""]
     if row_number == 0:
         if not CSV_Checks.check_column_count(row, exp_column_number):

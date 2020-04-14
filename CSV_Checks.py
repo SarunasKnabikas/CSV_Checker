@@ -2,9 +2,12 @@ import re
 
 
 def check_date_format(date):
-    match_date_format = re.match('[0-9]{4}-[0-9]{2}-[0-9]{2}', date)
-    if match_date_format is not None:
-        return True
+    if date != '':
+        match_date_format = re.match('[0-9]{4}-[0-9]{2}-[0-9]{2}', date)
+        if match_date_format is not None:
+            return True
+        else:
+            return False
     else:
         return False
 
