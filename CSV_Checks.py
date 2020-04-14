@@ -22,7 +22,8 @@ def check_column_count(row, expected_column_number):
 
 def check_whole_number_format(number):
     match_number_format = re.match('[0-9]', number)
-    if match_number_format is not None:
+    match_negative_number_format = re.match('-[0-9]', number)
+    if match_number_format is not None or match_negative_number_format is not None:
         return True
     else:
         return False
