@@ -61,6 +61,10 @@ def check_for_duplicates(list_of_elements):
     return not any(i in seen or seen.add(i) for i in list_of_elements)
 
 
+def check_for_duplicate_v2():
+    pass
+
+
 def check_text(value_to_check, text):
     if value_to_check == text:
         return True
